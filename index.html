@@ -4,6 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Chains of Brains — Presencia Digital con IA</title>
+<!-- Google Analytics 4 — reemplazá G-XXXXXXXXXX con tu Measurement ID -->
+<!-- Para obtenerlo: analytics.google.com → Nueva propiedad → Flujo de datos web → copiar G-XXXXXXXXXX -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
 <style>
@@ -51,6 +60,32 @@ h1 em{font-style:italic;color:var(--green)}
 .hcard-b{font-size:13px;color:var(--soft);line-height:1.65}
 .hcard-b strong{color:var(--green)}
 .bg-deco{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,12vw,180px);font-weight:900;color:rgba(0,255,136,.03);pointer-events:none;bottom:40px;left:0;white-space:nowrap;letter-spacing:-.03em}
+
+/* VISITOR COUNTER */
+.visit-counter{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:20px;
+  padding:8px 16px 8px 10px;
+  background:rgba(0,255,136,.05);
+  border:1px solid rgba(0,255,136,.15);
+  border-radius:24px;
+  font-size:12px;color:var(--muted);
+  backdrop-filter:blur(4px);
+}
+.vc-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);flex-shrink:0;
+  box-shadow:0 0 6px var(--green);
+  animation:vcpulse 2s ease-in-out infinite;
+}
+@keyframes vcpulse{0%,100%{opacity:1;box-shadow:0 0 6px var(--green)}50%{opacity:.5;box-shadow:0 0 2px var(--green)}}
+.vc-num{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:13px;color:var(--text);
+  font-variant-numeric:tabular-nums;
+  transition:all .4s ease;
+}
+.vc-lbl{color:var(--muted);font-size:11px}
 
 /* SECTIONS */
 section{padding:90px 5%}
@@ -233,6 +268,11 @@ body{top:0!important}
     <div class="btns">
       <a href="#productos" class="btn-g">Ver productos →</a>
       <a href="#precios" class="btn-o">Ver precios</a>
+    </div>
+    <div class="visit-counter" id="visit-counter" style="opacity:0;transition:opacity .6s">
+      <span class="vc-dot"></span>
+      <span class="vc-num" id="vc-num">—</span>
+      <span class="vc-lbl">visitas</span>
     </div>
   </div>
   <div class="hero-right reveal">
@@ -602,6 +642,49 @@ function sendForm(e){
   btn.style.background='#00cc6a';
   setTimeout(()=>{ btn.textContent='Enviar mensaje →'; btn.style.background=''; e.target.reset(); },3000);
 }
+
+// ── Visitor counter (counterapi.dev — free, no signup) ──────────────────────
+(async function initCounter() {
+  const NS  = 'chainsofbrains';
+  const KEY = 'homepage';
+  const numEl  = document.getElementById('vc-num');
+  const wrapEl = document.getElementById('visit-counter');
+  if (!numEl || !wrapEl) return;
+
+  try {
+    // increment on each real visit (debounced by sessionStorage so refreshes don't spam)
+    const visited = sessionStorage.getItem('cob_visited');
+    const endpoint = visited
+      ? `https://api.counterapi.dev/v1/${NS}/${KEY}`
+      : `https://api.counterapi.dev/v1/${NS}/${KEY}/up`;
+    if (!visited) sessionStorage.setItem('cob_visited', '1');
+
+    const r = await fetch(endpoint);
+    if (!r.ok) return;
+    const data = await r.json();
+    const count = data.count ?? data.value ?? 0;
+
+    // Animate number
+    const target = count;
+    const duration = 1200;
+    const start = Math.max(0, target - Math.min(target, 60));
+    const startTime = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      numEl.textContent = Math.round(start + (target - start) * ease).toLocaleString('es-ES');
+      if (progress < 1) requestAnimationFrame(tick);
+      else numEl.textContent = target.toLocaleString('es-ES');
+    }
+
+    wrapEl.style.opacity = '1';
+    requestAnimationFrame(tick);
+  } catch(e) {
+    // silently fail — counter is decorative, not critical
+    wrapEl.style.display = 'none';
+  }
+})();
 </script>
 </body>
 </html>
