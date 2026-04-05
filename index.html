@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chains of Brains — Sistemas de IA para negocios</title>
+  <meta name="description" content="Chains of Brains diseña e implementa sistemas de inteligencia artificial para negocios que quieren crecer sin añadir carga operativa.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a0b;
+      --surface:  #111114;
+      --border:   #1e1e24;
+      --gold:     #c9a84c;
+      --gold-dim: rgba(201,168,76,.12);
+      --gold-glow:rgba(201,168,76,.06);
+      --text:     #e8e8ee;
+      --muted:    #6b6b80;
+      --white:    #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(10,10,11,.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px;
+      color: var(--white); letter-spacing: -.3px;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--gold); color: #0a0a0b; padding: 9px 22px;
+      border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .88; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 140px 24px 80px;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,168,76,.07) 0%, transparent 70%);
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-dim); border: 1px solid rgba(201,168,76,.2);
+      padding: 6px 16px; border-radius: 100px;
+      font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(38px, 6vw, 72px); line-height: 1.08;
+      letter-spacing: -1.5px; color: var(--white);
+      max-width: 840px; margin-bottom: 24px;
+    }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px); color: var(--muted); font-weight: 300;
+      max-width: 540px; margin-bottom: 48px; line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--gold); color: #0a0a0b; padding: 14px 32px;
+      border-radius: 8px; font-size: 15px; font-weight: 600;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .btn-primary:hover { opacity: .88; }
+    .btn-secondary {
+      background: transparent; color: var(--text); padding: 14px 32px;
+      border-radius: 8px; font-size: 15px; font-weight: 500;
+      text-decoration: none; border: 1px solid var(--border);
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── STATS ── */
+    .stats {
+      display: flex; justify-content: center; gap: 64px;
+      flex-wrap: wrap; padding: 16px 24px; margin-top: 72px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+      color: var(--gold); letter-spacing: -1px;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── SECTION ── */
+    section { padding: 100px 24px; max-width: 1100px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(28px, 4vw, 44px); line-height: 1.12;
+      letter-spacing: -1px; color: var(--white); max-width: 600px;
+      margin-bottom: 20px;
+    }
+    .section-sub { color: var(--muted); font-size: 17px; max-width: 540px; line-height: 1.7; }
+
+    /* ── SERVICIOS ── */
+    .servicios-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px; margin-top: 56px;
+    }
+    .servicio-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 32px;
+      transition: border-color .25s, transform .25s;
+    }
+    .servicio-card:hover { border-color: rgba(201,168,76,.35); transform: translateY(-3px); }
+    .servicio-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--gold-dim); border: 1px solid rgba(201,168,76,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 20px;
+    }
+    .servicio-card h3 {
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+      color: var(--white); margin-bottom: 10px;
+    }
+    .servicio-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    /* ── CÓMO FUNCIONA ── */
+    .steps { margin-top: 56px; display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: grid; grid-template-columns: 56px 1fr; gap: 24px;
+      padding: 32px 0; border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      color: var(--gold); padding-top: 4px;
+    }
+    .step h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .step p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+    /* ── SECTORES ── */
+    .sectores-wrap { margin-top: 56px; display: flex; flex-wrap: wrap; gap: 12px; }
+    .sector-tag {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 10px 20px; border-radius: 100px; font-size: 14px;
+      color: var(--muted); font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .sector-tag:hover { border-color: var(--gold); color: var(--gold); }
+    .sector-tag.active { border-color: rgba(201,168,76,.4); color: var(--gold); background: var(--gold-dim); }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      text-align: center; padding: 100px 24px;
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(201,168,76,.05) 0%, transparent 70%);
+      border-top: 1px solid var(--border);
+    }
+    .cta-final h2 {
+      font-family: 'Syne', sans-serif; font-size: clamp(30px, 4vw, 48px);
+      font-weight: 800; letter-spacing: -1px; color: var(--white); margin-bottom: 20px;
+    }
+    .cta-final h2 em { font-style: normal; color: var(--gold); }
+    .cta-final p { color: var(--muted); font-size: 17px; margin-bottom: 40px; }
+    .cta-email {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 12px 16px 12px 24px; border-radius: 10px; margin-top: 8px;
+    }
+    .cta-email span { color: var(--muted); font-size: 15px; }
+    .cta-email a {
+      background: var(--gold); color: #0a0a0b; padding: 8px 20px;
+      border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .cta-email a:hover { opacity: .88; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 48px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--muted); }
+    .footer-logo span { color: var(--gold); }
+    footer p { color: var(--muted); font-size: 13px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .stats { gap: 32px; }
+      section { padding: 72px 20px; }
+      footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Chains<span>of</span>Brains</div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#sectores">Sectores</a>
+  </div>
+  <a href="mailto:info@brandmindstudio.net" class="nav-cta">Hablar con nosotros</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">⬡ Inteligencia Artificial Aplicada</div>
+  <h1>Tu negocio debería trabajar<br><em>más inteligente</em>, no más.</h1>
+  <p class="hero-sub">Chains of Brains diseña e implementa sistemas de IA que automatizan la gestión, reducen la carga operativa y generan resultados medibles — desde el primer mes.</p>
+  <div class="hero-actions">
+    <a href="mailto:info@brandmindstudio.net" class="btn-primary">Pedir demo sin compromiso</a>
+    <a href="#servicios" class="btn-secondary">Ver cómo funciona</a>
+  </div>
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-num">-40%</div>
+      <div class="stat-label">Tiempo en gestión administrativa</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">72h</div>
+      <div class="stat-label">De contrato a sistema funcionando</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Adaptado a tu flujo real</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="section-eyebrow">Servicios</div>
+  <h2 class="section-title">IA que se integra en cómo ya trabajás</h2>
+  <p class="section-sub">No vendemos software genérico. Diseñamos sistemas a medida que resuelven problemas concretos de tu negocio.</p>
+
+  <div class="servicios-grid">
+    <div class="servicio-card">
+      <div class="servicio-icon">🗂</div>
+      <h3>Gestión de clientes con IA</h3>
+      <p>Automatizá el seguimiento, los recordatorios y la comunicación post-servicio. Menos cancelaciones, mejor retención, sin trabajo manual adicional.</p>
+    </div>
+    <div class="servicio-card">
+      <div class="servicio-icon">📊</div>
+      <h3>Dashboard de negocio en tiempo real</h3>
+      <p>Métricas de ocupación, ingresos, servicios más rentables y evolución de clientes — todo visible de un vistazo, sin depender de hojas de cálculo.</p>
+    </div>
+    <div class="servicio-card">
+      <div class="servicio-icon">✉️</div>
+      <h3>Captación y outreach automatizado</h3>
+      <p>Identificamos clientes potenciales, analizamos su perfil y generamos comunicación personalizada a escala — sin perder el tono humano.</p>
+    </div>
+    <div class="servicio-card">
+      <div class="servicio-icon">🔗</div>
+      <h3>Integración de agentes IA</h3>
+      <p>Coordinamos múltiples agentes especializados: uno busca, otro analiza, otro comunica. Un sistema completo que trabaja mientras vos atendés a tus clientes.</p>
+    </div>
+    <div class="servicio-card">
+      <div class="servicio-icon">⚙️</div>
+      <h3>Automatización de procesos internos</h3>
+      <p>Facturación, informes, coordinación de equipo. Identificamos qué tareas repetitivas consumen más tiempo y las automatizamos primero.</p>
+    </div>
+    <div class="servicio-card">
+      <div class="servicio-icon">🎯</div>
+      <h3>Consultoría de implementación</h3>
+      <p>No dejamos un sistema instalado y nos vamos. Acompañamos la puesta en marcha, la adopción del equipo y la mejora continua durante los primeros 90 días.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso" style="background: var(--surface); border-radius: 20px; padding: 72px 56px; max-width: 1100px; margin: 0 auto 40px;">
+  <div class="section-eyebrow">Proceso</div>
+  <h2 class="section-title">De la primera llamada al sistema funcionando</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <h3>Diagnóstico real</h3>
+        <p>Analizamos tu operativa: qué se hace manualmente, dónde se pierde tiempo, qué datos tenés y qué te falta. Sin asumir nada por adelantado.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <h3>Diseño del sistema</h3>
+        <p>Definimos qué automatizar primero según impacto y facilidad de implementación. Entregamos un plan concreto antes de tocar nada.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <h3>Implementación en 72h</h3>
+        <p>Desarrollamos e integramos el sistema en tu flujo existente. Sin migraciones complicadas, sin cambiar lo que ya funciona.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <h3>Seguimiento y ajuste</h3>
+        <p>Los primeros 30 días monitoreamos resultados y ajustamos. La IA mejora con el uso — y nosotros estamos ahí para asegurarlo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORES -->
+<section id="sectores">
+  <div class="section-eyebrow">Sectores</div>
+  <h2 class="section-title">Funcionamos en negocios de servicios</h2>
+  <p class="section-sub">Cualquier negocio que gestione clientes, agenda y equipo puede beneficiarse. Estos son los sectores donde ya trabajamos.</p>
+
+  <div class="sectores-wrap">
+    <div class="sector-tag active">Clínicas y salud</div>
+    <div class="sector-tag active">Fisioterapia y rehabilitación</div>
+    <div class="sector-tag">Despachos y consultoría</div>
+    <div class="sector-tag">Formación y academias</div>
+    <div class="sector-tag">Agencias de servicios</div>
+    <div class="sector-tag">Comercios con agenda</div>
+    <div class="sector-tag">Inmobiliarias</div>
+    <div class="sector-tag">Estudios de arquitectura</div>
+    <div class="sector-tag">Centros de bienestar</div>
+    <div class="sector-tag">Psicología y coaching</div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-final">
+  <h2>¿Cuánto tiempo perdés<br><em>cada semana en gestión</em>?</h2>
+  <p>Una demo de 20 minutos es suficiente para verlo funcionando en tu tipo de negocio.<br>Sin compromisos, sin instalaciones, sin presión.</p>
+  <div class="cta-email">
+    <span>info@brandmindstudio.net</span>
+    <a href="mailto:info@brandmindstudio.net">Pedir demo →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Chains<span>of</span>Brains</div>
+  <p>© 2026 Chains of Brains. Todos los derechos reservados.</p>
+  <p><a href="mailto:info@brandmindstudio.net" style="color:var(--muted);text-decoration:none">info@brandmindstudio.net</a></p>
+</footer>
+
+</body>
+</html>
